@@ -18,9 +18,9 @@ class DatabaseClient
     private function db_connect()
     {
         $this->host = 'localhost';
-        $this->username = '';
-        $this->password = '';
-        $this->db = '';
+        $this->username = 'root';
+        $this->password = 'root';
+        $this->db = 'hire_developers_db';
 
         $this->conn = new mysqli($this->host, $this->username, $this->password, $this->db);
         return $this->conn;
@@ -95,14 +95,6 @@ class DatabaseClient
         return $array;
     }
 
-    // update
-//        public function update($tableName, array $columns, array $values, $where='1=1') {
-//            $columnsList = implode(', ', $columns);
-//            $valuesList = implode(', ', $values);
-//            $update_sql = "UPDATE $tableName SET $columnsList = $valuesList WHERE $columnsList = $valuesList";
-//            return mysqli_query($this->db_connect(), $update_sql);
-//        }
-
 
     public function update($table_name, $fields, $where_condition)
     {
@@ -127,7 +119,7 @@ class DatabaseClient
              'id'     =>     '5'
         )
         output = id = '5'*/
-        $query = "UPDATE " . $table_name . " SET " . $query . " WHERE " . $condition . "";
+        $query = "UPDATE " . $table_name . " SET " . $query . " WHERE " . $condition;
         if (mysqli_query($this->db_connect(), $query)) {
             return true;
         }
@@ -175,7 +167,7 @@ class DatabaseClient
 
 }
 
-//$db = new DatabaseClient();
+//$dbClient = new DatabaseClient();
 //$connect= $db->conn;
 //$db->db_num("SELECT * FROM users");
 

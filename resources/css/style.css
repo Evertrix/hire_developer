@@ -55,3 +55,22 @@ input[type=date] {
     margin-top: 150px;
     margin-bottom: 100px;
 }
+
+
+
+.mode {
+    float:right;
+}
+.change {
+    cursor: pointer;
+    border: 1px solid #555;
+    border-radius: 40%;
+    width: 20px;
+    text-align: center;
+    padding: 5px;
+    margin-left: 8px;
+}
+.dark{
+    background-color: #222;
+    color: #e6e6e6;
+}

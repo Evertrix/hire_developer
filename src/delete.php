@@ -10,7 +10,7 @@ $del = $dbClient->delete('developers', ['id'], [$_GET['id']]); // delete query
 if($del)
 {
     // Close connection
-    header("Location:index.php"); // redirects to all records page
+    header("Location: ../public/index.php"); // redirects to all records page
     exit;
 }
 else

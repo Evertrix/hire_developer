@@ -1,6 +1,6 @@
 <?php
-require_once('db.php');
-$dbClient = new DatabaseClient();
+require_once('../src/db.php');
+//$dbClient = new DatabaseClient();
 ?>
 <!doctype html>
 <html lang="en">
@@ -12,13 +12,13 @@ $dbClient = new DatabaseClient();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="../hire_developers/assets/css/style.css">
+    <link rel="stylesheet" href="../../hire_developers_corrections/resources/css/style.css">
     <title>Babel</title>
 </head>
 <body>
 <?php include('header.php'); ?>
 <br>
-<form class="col-6 container" action="action.php" method="POST" enctype="multipart/form-data">
+<form class="col-6 container" action="../src/action.php" method="POST" enctype="multipart/form-data">
     <div class="row">
         <div class="form-group col-12">
             <label for="developer_name" class="form-label">Name of Developer:</label>
@@ -62,7 +62,7 @@ $dbClient = new DatabaseClient();
         </div>
         <div class="form-group col-12">
             <label for="description" class="form-label">Description:</label>
-            <textarea name="description" rows="10" cols="70"></textarea>
+            <textarea name="description" class="form-control" rows="10" cols="70"></textarea>
         </div>
         <div class="form-group col-12">
             <label for="years_of_experience" class="form-label">Years of Experience: </label>
