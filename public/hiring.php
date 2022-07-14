@@ -1,3 +1,12 @@
+<?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+include('header.php');
+include "autoload.php";
+$developer = new Developer();
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,12 +21,6 @@
     <title>Edit Client</title>
 </head>
 <body>
-<?php
-include('header.php');
-require_once('../src/db.php');
-include('../src/functions.php');
-$dbClient = new DatabaseClient();
-?>
 <div class="form-group col-12">
     <form class="col-6 container" method="post" action="hiring.php" enctype="multipart/form-data">
         <h4>Hire Available Developers</h4>
@@ -28,7 +31,7 @@ $dbClient = new DatabaseClient();
             <select name="select_developer_to_hire[]" class="form-control" multiple="multiple"
                     aria-label="multiple select example">>
                 <?php
-                selection_all_developers($dbClient->select('developers', ['id', 'name', 'email', 'price_per_hour', 'technology']))
+                $developer->fetch_hireable_developers($developer->readDeveloper("developers"));
                 ?>
             </select>
 
@@ -38,9 +41,9 @@ $dbClient = new DatabaseClient();
 </div>
 <br>
 <?php
-submit_developer_for_hire($dbClient);
+$developer->submit_developer_for_hire();
 
-$select_hired_developers = $dbClient->select('hire_developers', ['id', 'names', 'start_date', 'end_date']);
+$select_hired_developers = $developer->readDeveloper("hire_developers");
 ?>
 <table class='table center col-10 mt-5 mb-5'>
     <thead>
@@ -53,7 +56,7 @@ $select_hired_developers = $dbClient->select('hire_developers', ['id', 'names', 
     </thead>
 
     <?php
-    select_hired_developers($select_hired_developers);
+    $developer->list_hired_developers($select_hired_developers);
     ?>
 
 </table>
