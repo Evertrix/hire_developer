@@ -1,6 +1,9 @@
 <?php
-require_once('../src/db.php');
-//$dbClient = new DatabaseClient();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include "../src/autoload.php";
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -22,12 +25,12 @@ require_once('../src/db.php');
     <div class="row">
         <div class="form-group col-12">
             <label for="developer_name" class="form-label">Name of Developer:</label>
-            <input type="text" class="form-control" name="developer_name" id="developer_name"
+            <input type="text" class="form-control" name="name" id="developer_name"
                    placeholder="Name of Developer">
         </div>
         <div class="form-group col-12">
             <label for="developer_email" class="form-label">Email of Developer:</label>
-            <input type="text" class="form-control" name="developer_email" id="developer_email"
+            <input type="text" class="form-control" name="email" id="developer_email"
                    placeholder="Email of Developer">
         </div>
         <div class="form-group col-12">
@@ -50,7 +53,7 @@ require_once('../src/db.php');
         </div>
         <div class="form-group col-12">
             <label for="inputState">Technology:</label>
-            <select name="technology_selection" class="form-control">
+            <select name="technology" class="form-control">
                 <option value="">---Select Option---</option>
                 <option value="JavaScript">JavaScript</option>
                 <option value="Java">Java</option>
@@ -71,7 +74,7 @@ require_once('../src/db.php');
         </div>
         <div class="form-group col-12">
             <label for="native_language" class="form-label">Native Language:</label>
-            <select name="native_language_selection" class="form-control">
+            <select name="native_language" class="form-control">
                 <option value="">---Select Option---</option>
                 <option value="english">English</option>
                 <option value="serbian">Serbian</option>
@@ -80,7 +83,7 @@ require_once('../src/db.php');
         </div>
         <div class="form-group col-12">
             <label for="linkedin" class="form-label">Linkedin Profile Link:</label>
-            <input type="text" class="form-control" name="linkedin" id="linkedin" placeholder="Linkedin Profile Link">
+            <input type="text" class="form-control" name="linkedin_profile_link" id="linkedin" placeholder="Linkedin Profile Link">
         </div>
     </div>
     <br>
