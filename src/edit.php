@@ -13,19 +13,9 @@
 </head>
 <body>
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+include 'autoload.php';
 include('../public/header.php'); ?>
-<br>
-</body>
-</html>
 <?php
-include 'autoload.php'; // Autoloading the Database class
-//include('functions.php');
-
-
-//require_once('Developer.php');
 $developer = new Developer();
 if(isset($_POST['update'])) {
     $developer->updateDeveloper();
@@ -33,18 +23,14 @@ if(isset($_POST['update'])) {
     exit();
 }
 ?>
+<br>
 <br><h3 class="text-center">Edit data:</h3><br>
 <form class="col-6 container" name="form" method="POST" enctype="multipart/form-data"><br>
     <div class="row">
         <?php
-        //        $id = $_GET['id'];
-        //        $selection_all_clients = $dbClient->select('developers', ['*'], "id='$id'");
-        //        if (mysqli_num_rows($selection_all_clients) > 0) {
-        //        while ($rowing = mysqli_fetch_array($selection_all_clients)) {
-
         $selection_all_clients = $developer->query("SELECT * FROM developers WHERE id=:id", ["id" => $_GET['id']]);
         if (count($selection_all_clients)) {
-            $selected_clients = $developer->query("SELECT * FROM developers WHERE id=:id", ["id" => $_GET['id']], PDO::FETCH_BOTH);
+        $selected_clients = $developer->query("SELECT * FROM developers WHERE id=:id", ["id" => $_GET['id']], PDO::FETCH_BOTH);
         foreach ($selection_all_clients as $row) {
 
         $technologies = ["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"];
@@ -58,18 +44,18 @@ if(isset($_POST['update'])) {
         </div>
         <div class="form-group col-12">
             <label for="email" class="form-label">Edit Email:</label>
-            <input type="text" class="form-control" id="email" name="email" value="<?php echo $row['email'] ?>"
+            <input type="text" class="form-control" id="email" name="email" value="<?=$row['email'] ?>"
                    placeholder="Edit Email">
         </div>
         <div class="form-group col-12">
             <label for="phone" class="form-label">Edit Phone:</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $row['phone'] ?>"
+            <input type="text" class="form-control" id="phone" name="phone" value="<?=$row['phone'] ?>"
                    placeholder="Edit Phone">
         </div>
         <div class="form-group col-12">
             <label for="location" class="form-label">Edit Location:</label>
             <input type="text" class="form-control" id="location" name="location"
-                   value="<?php echo $row['location'] ?>" placeholder="Edit Location">
+                   value="<?=$row['location'] ?>" placeholder="Edit Location">
         </div>
         <div class="form-group col-12">
             <label for="profile_picture" class="form-label">Edit Profile Picture:</label>
@@ -83,7 +69,7 @@ if(isset($_POST['update'])) {
         <div class="form-group col-12">
             <label for="price_per_hour" class="form-label">Edit Price Per Hour:</label>
             <input type="number" class="form-control" id="price_per_hour" name="price_per_hour"
-                   value="<?php echo $row['price_per_hour'] ?>" placeholder="Edit Price Per Hour">
+                   value="<?=$row['price_per_hour'] ?>" placeholder="Edit Price Per Hour">
         </div>
         <div class="form-group col-12">
             <label for="inputState">Edit Technology:</label>
@@ -94,12 +80,12 @@ if(isset($_POST['update'])) {
         <div class="form-group col-12">
             <label for="description" class="form-label">Edit Description:</label>
             <textarea id="description" name="description" class="form-control" rows="10"
-                      cols="70"><?php echo $row['description'] ?></textarea>
+                      cols="70"><?=$row['description'] ?></textarea>
         </div>
         <div class="form-group col-12">
             <label for="years_of_experience" class="form-label">Edit Years of experience:</label>
             <input type="text" class="form-control" id="years_of_experience" name="years_of_experience"
-                   value="<?php echo $row['years_of_experience'] ?>" placeholder="Edit Years of experience">
+                   value="<?=$row['years_of_experience'] ?>" placeholder="Edit Years of experience">
         </div>
         <div class="form-group col-12">
             <label for="inputState">Edit selected Native Language:</label>
@@ -110,10 +96,10 @@ if(isset($_POST['update'])) {
         <div class="form-group col-12">
             <label for="linkedin_profile_link" class="form-label">Edit LinkdedIn profile link:</label>
             <input type="text" class="form-control" id="linkedin_profile_link" name="linkedin_profile_link"
-                   value="<?php echo $row['linkedin_profile_link'] ?>" placeholder="Edit Linkedin Profile Link">
+                   value="<?=$row['linkedin_profile_link'] ?>" placeholder="Edit Linkedin Profile Link">
         </div>
         <div class="col-12 text-center">
-            <button type="submit" name="update" value="Update" class="btn btn-primary ">Edit</button>
+            <button type="submit" name="update" value="Update" class="btn btn-primary ">Update</button>
         </div>
     </div>
 </form>
@@ -122,3 +108,5 @@ if(isset($_POST['update'])) {
 }
 }
 ?>
+</body>
+</html>
