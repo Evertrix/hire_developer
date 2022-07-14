@@ -26,10 +26,6 @@ class Database {
 
         try {
             $this->connection = new PDO($dsn, 'root', 'root', $options);
-
-            if ($this->connection) {
-                echo "Connected to the hire_developers_db database successfully!";
-            }
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

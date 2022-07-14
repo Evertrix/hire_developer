@@ -1,5 +1,5 @@
 <?php
-include "Database.php";
+include "autoload.php";
 class Query extends Database {
 
     protected function __construct() {

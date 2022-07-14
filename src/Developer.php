@@ -1,7 +1,5 @@
 <?php
 include "autoload.php";
-include "Query.php";
-
 class Developer extends Query
 {
     public function __construct()
