@@ -1,5 +1,6 @@
 <?php
 include "autoload.php";
+
 class Developer extends Query
 {
     public function __construct()
@@ -51,10 +52,12 @@ class Developer extends Query
 
     }
 
-    public function updateDeveloper()
+    public static function updateDeveloper()
     {
-        $string_query = "UPDATE developers SET
-                      name=:name,
+        $string_query = "UPDATE developers, hire_developers
+                    SET                   
+                      developers.name=:name,
+                      hire_developers.names=:name,
                       email=:email,
                       phone=:phone,
                       location=:location,
@@ -64,14 +67,15 @@ class Developer extends Query
                       description=:description,
                       years_of_experience=:years_of_experience,
                       native_language=:native_language,
-                      linkedin_profile_link=:linkedin_profile_link WHERE id=:id";
+                      linkedin_profile_link=:linkedin_profile_link WHERE developers.id=:id";
 
-        $this->developerData("update", $string_query);
+
+        (new self)->developerData("update", $string_query);
     }
 
     public function deleteDeveloper($table)
     {
-        return $this->query("DELETE FROM $table WHERE id = :id", ["id" => $_GET['id']]);
+        return (new self)->query("DELETE FROM $table WHERE id = :id", ["id" => $_GET['id']]);
     }
 
     function createDeveloper()
@@ -106,16 +110,16 @@ class Developer extends Query
         }
     }
 
-    public function readDeveloper($table, $identify_developer = null)
+    public static function readDeveloper($table, $identify_developer = null)
     {
         if ($identify_developer !== null) {
-            return $this->query("SELECT * FROM $table WHERE id=:id", ["id" => $identify_developer]);
+            return (new self)->query("SELECT * FROM $table WHERE id=:id", ["id" => $identify_developer]);
         } else {
-            return $this->query("SELECT * FROM $table");
+            return (new self)->query("SELECT * FROM $table");
         }
     }
 
-    public function selection_data_fetch($data_type, $row, $row_param)
+    public static function selection_data_fetch($data_type, $row, $row_param)
     {
         foreach ($data_type as $data) {
             if ($data == $row[$row_param]) {
@@ -131,7 +135,7 @@ class Developer extends Query
     }
 
 
-    public function submit_developer_for_hire()
+    public static function submit_developer_for_hire()
     {
         $now = date("Y-m-d H:i:s");
         $select_developer_to_hire = $_POST['select_developer_to_hire'];
@@ -140,7 +144,7 @@ class Developer extends Query
 
         foreach ($select_developer_to_hire as $single_dev) {
             $array_dev[] = $single_dev;
-            $developer_for_hire_from_db_select = $this->row("SELECT * FROM hire_developers WHERE names = :names AND (:start_date BETWEEN start_date AND end_date OR :end_date  BETWEEN start_date AND end_date)", ["names" => $single_dev, "start_date" => $start_date, "end_date" => $end_date]);
+            $developer_for_hire_from_db_select = (new self)->row("SELECT * FROM hire_developers WHERE names = :names AND (:start_date BETWEEN start_date AND end_date OR :end_date  BETWEEN start_date AND end_date)", ["names" => $single_dev, "start_date" => $start_date, "end_date" => $end_date]);
             $check_rows = $developer_for_hire_from_db_select;
             $store_res[] = $check_rows;
 
@@ -163,18 +167,12 @@ class Developer extends Query
                 continue;
             }
             foreach ($array_dev as $one_dev) {
-                $this->query("INSERT INTO hire_developers(names, start_date, end_date) VALUES(:names, :start_date, :end_date)", ["names" => $one_dev, "start_date" => $_POST['start_date'], "end_date" => $_POST['end_date']]);
+                (new self)->query("INSERT INTO hire_developers(names, start_date, end_date) VALUES(:names, :start_date, :end_date)", ["names" => $one_dev, "start_date" => $_POST['start_date'], "end_date" => $_POST['end_date']]);
             }
         }
-//            if($this->query("SELECT * FROM hire_developers WHERE NOW() > end_date=:end_date", ["end_date" => $end_date])) {
-//                //    DELETE FROM hire_developers WHERE end_date < NOW()
-//                $this->deleteDeveloper("hire_developers");
-//                header('Location: ../public/hiring.php');
-//                die("Select valid date");
-//            }
     }
 
-    public function fetch_hireable_developers($dev_parm)
+    public static function fetch_hireable_developers($dev_parm)
     {
         asort($dev_parm);
         foreach ($dev_parm as $row) {
@@ -184,20 +182,32 @@ class Developer extends Query
         }
     }
 
-    public function list_hired_developers($row_rams)
+    public static function join_select_dev()
+    {
+        return (new self)->query("SELECT d.*, h.* FROM developers d INNER JOIN hire_developers h ON d.name = h.names");
+    }
+
+    public static function list_automation($row_rams, $values, $edit_and_delete)
     {
         foreach ($row_rams as $row):
             ?>
             <tbody>
             <tr>
-                <td><?= $row['names'] ?></td>
-                <td><?= $row['start_date'] ?></td>
-                <td><?= $row['end_date'] ?></td>
-                <?php
-                ?>
-                <td><a href="../src/delete_hired_developer.php?id=<?= $row['id']; ?>">Delete</a></td>
-                <?php
-                ?>
+                <?php foreach ($values as $value): ?>
+                    <?php if ($value !== "profile_picture") { ?>
+                        <td><?= $row[$value] ?></td>
+                    <?php } else { ?>
+                        <td><img src='<?= $row['profile_picture'] ?>' height='50' width=50'
+                                 alt='Profile Picture of the developer'></td>
+                    <?php } ?>
+                <?php endforeach; ?>
+
+                <?php if ($edit_and_delete[0] !== null) { ?>
+                    <td><a href="../src/edit.php?id=<?php echo $row['id']; ?>">Edit</a></td>
+                <?php } ?>
+                <?php if ($edit_and_delete[1] !== null) { ?>
+                    <td><a href="../src/delete.php?id=<?= $row['id']; ?>">Delete</a></td>
+                <?php } ?>
             </tr>
             </tbody>
         <?php
