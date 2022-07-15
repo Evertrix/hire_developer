@@ -1,3 +1,16 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include 'autoload.php';
+
+$developer = new Developer();
+if(isset($_POST['update'])) {
+    $developer->updateDeveloper();
+    header('Location: ../public/index.php');
+    exit();
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,28 +26,16 @@
 </head>
 <body>
 <?php
-include 'autoload.php';
-include('../public/header.php'); ?>
-<?php
-$developer = new Developer();
-if(isset($_POST['update'])) {
-    $developer->updateDeveloper();
-    header('Location: ../public/index.php');
-    exit();
-}
+include('../public/header.php');
 ?>
 <br>
 <br><h3 class="text-center">Edit data:</h3><br>
 <form class="col-6 container" name="form" method="POST" enctype="multipart/form-data"><br>
     <div class="row">
         <?php
-        $selection_all_clients = $developer->query("SELECT * FROM developers WHERE id=:id", ["id" => $_GET['id']]);
+        $selection_all_clients = $developer->readDeveloper("developers", $_GET['id']);
         if (count($selection_all_clients)) {
-        $selected_clients = $developer->query("SELECT * FROM developers WHERE id=:id", ["id" => $_GET['id']], PDO::FETCH_BOTH);
         foreach ($selection_all_clients as $row) {
-
-        $technologies = ["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"];
-        $native_languages = ["English", "Serbian", "Bulgarian"];
         ?>
         <div class="form-group col-12">
             <label for="name" class="form-label">Edit Developer name:</label>
@@ -74,7 +75,7 @@ if(isset($_POST['update'])) {
         <div class="form-group col-12">
             <label for="inputState">Edit Technology:</label>
             <select name="technology" class="form-control">
-                <?php $developer->selection_data_fetch($technologies, $row, "technology"); ?>
+                <?php $developer->selection_data_fetch(["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"], $row, "technology"); ?>
             </select>
         </div>
         <div class="form-group col-12">
@@ -90,7 +91,7 @@ if(isset($_POST['update'])) {
         <div class="form-group col-12">
             <label for="inputState">Edit selected Native Language:</label>
             <select id="inputState" name="native_language" class="form-control">
-                <?php $developer->selection_data_fetch($native_languages, $row, "native_language"); ?>
+                <?php $developer->selection_data_fetch(["English", "Serbian", "Bulgarian"], $row, "native_language"); ?>
             </select>
         </div>
         <div class="form-group col-12">
