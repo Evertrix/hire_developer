@@ -2,9 +2,7 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
-include('header.php');
-include "autoload.php";
-$developer = new Developer();
+include "../src/autoload.php";
 ?>
 
 <!doctype html>
@@ -21,6 +19,7 @@ $developer = new Developer();
     <title>Edit Client</title>
 </head>
 <body>
+<?php include('header.php'); ?>
 <div class="form-group col-12">
     <form class="col-6 container" method="post" action="hiring.php" enctype="multipart/form-data">
         <h4>Hire Available Developers</h4>
@@ -31,7 +30,7 @@ $developer = new Developer();
             <select name="select_developer_to_hire[]" class="form-control" multiple="multiple"
                     aria-label="multiple select example">>
                 <?php
-                $developer->fetch_hireable_developers($developer->readDeveloper("developers"));
+                Developer::fetch_hireable_developers(Developer::readDeveloper("developers"));
                 ?>
             </select>
 
@@ -41,14 +40,15 @@ $developer = new Developer();
 </div>
 <br>
 <?php
-$developer->submit_developer_for_hire();
+Developer::submit_developer_for_hire();
 
-$select_hired_developers = $developer->readDeveloper("hire_developers");
+$select_hired_developers = Developer::join_select_dev();
 ?>
 <table class='table center col-10 mt-5 mb-5'>
     <thead>
     <tr>
         <th scope='col'>Names</th>
+        <th scope='col'>Profile Picture</th>
         <th scope='col'>Start Date</th>
         <th scope='col'>End Date</th>
         <th scope='col'>Delete</th>
@@ -56,7 +56,7 @@ $select_hired_developers = $developer->readDeveloper("hire_developers");
     </thead>
 
     <?php
-    $developer->list_hired_developers($select_hired_developers);
+    Developer::list_automation($select_hired_developers, ["names", "profile_picture", "start_date", "end_date"], [null, "delete"])
     ?>
 
 </table>

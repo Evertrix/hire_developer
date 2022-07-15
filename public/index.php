@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include "../src/autoload.php";
-$developer = new Developer();
 ?>
 <!doctype html>
 <html lang="en">
@@ -22,7 +21,7 @@ $developer = new Developer();
 <?php include('header.php'); ?>
 <br>
 <?php
-$selection_all_developer = $developer->readDeveloper("developers");
+$selection_all_developer = Developer::readDeveloper("developers");
 ?>
 <table class='table center col-10 mt-5 mb-5'>
     <thead>
@@ -38,25 +37,7 @@ $selection_all_developer = $developer->readDeveloper("developers");
     </tr>
     </thead>
     <?php
-    foreach ($selection_all_developer as $row) {
-        $image_src = $row['profile_picture'];
-        echo "<tbody>";
-        echo "<tr>";
-        echo "<td>" . $row['id'] . "</td>";
-        echo "<td>" . $row['name'] . "</td>";
-        echo "<td>" . $row['email'] . "</td>";
-        echo "<td>";
-        echo "<img src='$image_src' height='50' width=50' alt='Profile Picture of the developer'>";
-        echo "</td>";
-        echo "<td>" . $row['price_per_hour'] . "$" . "</td>";
-        echo "<td>" . $row['technology'] . "</td>";
-        ?>
-        <td><a href="../src/edit.php?id=<?php echo $row['id']; ?>">Edit</a></td>
-        <td><a href="../src/delete.php?id=<?php echo $row['id']; ?>">Delete</a></td>
-        </tr>
-        </tbody>
-        <?php
-    }
+    Developer::list_automation($selection_all_developer, ["id", "name", "email", "profile_picture", "price_per_hour", "technology"], ["edit", "delete"]);
     ?>
 </table>
 </div>
