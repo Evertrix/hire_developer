@@ -1,3 +1,10 @@
+<?php
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+include "../src/autoload.php";
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,12 +19,7 @@
     <title>Edit Client</title>
 </head>
 <body>
-<?php
-include('header.php');
-require_once('../src/db.php');
-include('../src/functions.php');
-$dbClient = new DatabaseClient();
-?>
+<?php include('header.php'); ?>
 <div class="form-group col-12">
     <form class="col-6 container" method="post" action="hiring.php" enctype="multipart/form-data">
         <h4>Hire Available Developers</h4>
@@ -28,7 +30,7 @@ $dbClient = new DatabaseClient();
             <select name="select_developer_to_hire[]" class="form-control" multiple="multiple"
                     aria-label="multiple select example">>
                 <?php
-                selection_all_developers($dbClient->select('developers', ['id', 'name', 'email', 'price_per_hour', 'technology']))
+                Developer::fetch_hireable_developers(Developer::readDeveloper("developers"));
                 ?>
             </select>
 
@@ -38,14 +40,15 @@ $dbClient = new DatabaseClient();
 </div>
 <br>
 <?php
-submit_developer_for_hire($dbClient);
+Developer::submit_developer_for_hire();
 
-$select_hired_developers = $dbClient->select('hire_developers', ['id', 'names', 'start_date', 'end_date']);
+$select_hired_developers = Developer::join_select_dev();
 ?>
 <table class='table center col-10 mt-5 mb-5'>
     <thead>
     <tr>
         <th scope='col'>Names</th>
+        <th scope='col'>Profile Picture</th>
         <th scope='col'>Start Date</th>
         <th scope='col'>End Date</th>
         <th scope='col'>Delete</th>
@@ -53,7 +56,7 @@ $select_hired_developers = $dbClient->select('hire_developers', ['id', 'names', 
     </thead>
 
     <?php
-    select_hired_developers($select_hired_developers);
+    Developer::list_automation($select_hired_developers, ["names", "profile_picture", "start_date", "end_date"], [null, "delete"])
     ?>
 
 </table>

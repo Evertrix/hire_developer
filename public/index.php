@@ -1,8 +1,8 @@
 <?php
-//require_once('action.php');
-require_once('../src/db.php');
-//require_once('action.php');
-$dbClient = new DatabaseClient();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include "../src/autoload.php";
 ?>
 <!doctype html>
 <html lang="en">
@@ -20,9 +20,8 @@ $dbClient = new DatabaseClient();
 <body>
 <?php include('header.php'); ?>
 <br>
-
 <?php
-$selection_all_clients = $dbClient->select('developers', ['id', 'name', 'email', 'profile_picture', 'price_per_hour', 'technology']);
+$selection_all_developer = Developer::readDeveloper("developers");
 ?>
 <table class='table center col-10 mt-5 mb-5'>
     <thead>
@@ -38,30 +37,7 @@ $selection_all_clients = $dbClient->select('developers', ['id', 'name', 'email',
     </tr>
     </thead>
     <?php
-    //if (mysqli_num_rows($selection_all_clients) > 0) {
-    while ($row = mysqli_fetch_assoc($selection_all_clients)) {
-        $image_src = $row['profile_picture'];
-        echo "<tbody>";
-        echo "<tr>";
-        echo "<td>" . $row['id'] . "</td>";
-        echo "<td>" . $row['name'] . "</td>";
-        echo "<td>" . $row['email'] . "</td>";
-        echo "<td>";
-        if ($image_src !== '') {
-            echo "<img src='$image_src' height='50' width=50'>";
-        } else {
-            echo '';
-        }
-        echo "</td>";
-        echo "<td>" . $row['price_per_hour'] . "$" . "</td>";
-        echo "<td>" . $row['technology'] . "</td>";
-        ?>
-        <td><a href="../src/edit.php?id=<?php echo $row['id']; ?>">Edit</a></td>
-        <td><a href="../src/delete.php?id=<?php echo $row['id']; ?>">Delete</a></td>
-        </tr>
-        </tbody>
-        <?php
-    }
+    Developer::list_automation($selection_all_developer, ["id", "name", "email", "profile_picture", "price_per_hour", "technology"], ["edit", "delete"]);
     ?>
 </table>
 </div>

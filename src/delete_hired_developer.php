@@ -1,10 +1,11 @@
 <?php
-require_once('db.php');
-$dbClient = new DatabaseClient(); // Using database connection file here
+include "autoload.php";
+//require_once('Developer.php');
+$developer = new Developer(); // Using database connection file here
 
 $id = $_GET['id']; // get id through query string
 
-$del = $dbClient->delete('hire_developers', ['id'], [$_GET['id']]); // delete query
+$del = $developer->deleteDeveloper("hire_developers"); // delete query
 
 if ($del) {
     // Close connection
