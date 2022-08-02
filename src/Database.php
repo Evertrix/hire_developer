@@ -1,4 +1,6 @@
 <?php
+require_once 'src/autoload.php';
+
 class Database {
     # @object, The PDO object
     protected $pdo;
@@ -25,7 +27,7 @@ class Database {
         ];
 
         try {
-            $this->connection = new PDO($dsn, 'root', 'root', $options);
+            $this->connection = new PDO($dsn, 'root', '', $options);
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

@@ -1,5 +1,5 @@
 <?php
-include "autoload.php";
+require_once 'src/autoload.php';
 
 class Developer extends Query
 {

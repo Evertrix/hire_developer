@@ -1,11 +1,57 @@
 <?php
-include "autoload.php";
+
+require_once 'autoload.php';
+
 class Query extends Database {
 
     protected function __construct() {
         parent::__construct();
     }
 
+    /**
+     *	@void
+     *
+     *	Add the parameter to the parameter array
+     *	@param string $param
+     *	@param string $value
+     */
+    //$db->bind("id","1");
+    public function bind($param, $value) {
+        $this->parameters[sizeof($this->parameters)] = ":".$param . "\x7F" . utf8_encode($value);
+    }
+
+
+    /**
+     *	@void
+     *
+     *	Add more parameters to the parameter array
+     *	@param array $parray
+     */
+    //$db->bindMore(array("firstname"=>"John","id"=>"1"));
+//    public function bindMore($array_params) {
+//        $col_keys = @array_keys($array_params);
+//        foreach ((array) $col_keys as $keys) {
+//            $this->bind($keys, $array_params[$keys]);
+//        }
+//    }
+// ALTERNATIVE TO "bindMore"
+    public function bindMore($array_params) {
+        foreach ((array) $array_params as $key => $value) {
+            $this->bind($key, $value);
+        }
+    }
+
+
+    /**
+     *	Every method which needs to execute a SQL query uses this method.
+     *
+     *	1. If not connected, connect to the database.
+     *	2. Prepare Query.
+     *	3. Parameterize Query.
+     *	4. Execute Query.
+     *	5. On exception : Write Exception into the log + SQL query.
+     *	6. Reset the Parameters.
+     */
     public function execState($query, $parameters) {
         try {
 
@@ -31,33 +77,26 @@ class Query extends Database {
         $this->parameters = array();
     }
 
-    //$db->bind("id","1");
-    public function bind($param, $value) {
-        $this->parameters[sizeof($this->parameters)] = ":".$param . "\x7F" . utf8_encode($value);
-    }
 
-    //$db->bindMore(array("firstname"=>"John","id"=>"1"));
-    public function bindMore($array_params) {
-        $col_keys = @array_keys($array_params);
-        foreach ((array) $col_keys as $keys) {
-            $this->bind($keys, $array_params[$keys]);
-        }
-    }
-// ALTERNATIVE TO "bindMore"
-//    public function bindMore($array_params) {
-//        foreach ((array) $array_params as $key => $value) {
-//            $this->bind($key, $value);
-//        }
-//    }
 
+
+    /**
+     *  If the SQL query  contains a SELECT or SHOW statement it returns an array containing all of the result set row
+     *	If the SQL statement is a DELETE, INSERT, or UPDATE statement it returns the number of affected rows
+     *
+     *  @param  string $query
+     *	@param  array  $params
+     *	@param  int    $fetchmode
+     *	@return mixed
+     */
     // Build the working query
-    public function query($query_type, $params = null, $fetchmode = PDO::FETCH_ASSOC) {
+    public function query($query, $params = null, $fetchmode = PDO::FETCH_ASSOC) {
 
-        $query_type = trim($query_type);
+        $query_type = trim($query);
 
-        $this->execState($query_type, $params);
+        $this->execState($query, $params);
 
-        $rawStatement = explode(" ", $query_type);
+        $rawStatement = explode(" ", $query);
 
         # Which SQL statement is used
         $statement = strtolower($rawStatement[0]);
@@ -72,6 +111,15 @@ class Query extends Database {
 
     }
 
+
+    /**
+     *	Returns an array which represents a row from the result set
+     *
+     *	@param  string $query
+     *	@param  array  $params
+     *  @param  int    $fetchmode
+     *	@return array
+     */
     public function row($query,$params = null, $fetchmode = PDO::FETCH_ASSOC)
     {
         $this->execState($query,$params);
@@ -79,6 +127,13 @@ class Query extends Database {
     }
 
 
+    /**
+     * Writes the log and returns the exception
+     *
+     * @param  string $message
+     * @param  string $sql
+     * @return string
+     */
     private function ExceptionLog($message , $sql = "")
     {
         $exception  = 'Unhandled Exception. <br />';
